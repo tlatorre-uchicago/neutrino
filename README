@@ -1,0 +1,33 @@
+Neutrino
+========
+
+A high performance library for storing scalar timeseries data in redis.
+
+Installation
+============
+
+To install, simply type:
+
+    $ sudo pip install neutrino
+
+Design
+======
+
+Time series are stored as scalar values in bins with a fixed time step.
+These bins are stored in chunks, and each chunk is stored under a single
+redis key.
+
+Instead of specifying these parameters for each time series individually,
+the parameters are specified for a *pattern*, which is a regular
+expression.  When time series data is later added, the name of each time
+series is matched to these patterns, and for each match a time series is
+added.
+
+For example, the rule
+
+    >>> ts.add_rule(r'spam.*','f',1,10,100,'avg')
+
+will match any key starting with 'spam'. Any key matching this pattern
+will be stored in a time series which will average multiple values in a
+single bin, with a time step of 1 second, a chunk size of 10, and chunks
+will expire after 100 seconds.
